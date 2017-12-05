@@ -7,9 +7,12 @@
 
 
 Jsonparser的思路
+
 readObject
+
 通过读取第一个Token字符，是空格的话跳过去继续读取下一个。
 
+```
 private JsonException exception( String str ){
 	return new JsonException( str );
 }
@@ -178,4 +181,5 @@ Object read(){
 	}
 	return obj;
 }
+```
 
