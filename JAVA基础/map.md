@@ -159,3 +159,120 @@ LinkedHashMap和HashMap基本上一样，他依然是线程不安全的
 	}
 	
 ```
+
+### HashTable的put方法
+
+```
+	public synchronized V put(K key, V value) {
+        // Make sure the value is not null
+        if (value == null) {
+            throw new NullPointerException();
+        }
+
+        // Makes sure the key is not already in the hashtable.
+        Entry<?,?> tab[] = table;
+        int hash = key.hashCode();
+        int index = (hash & 0x7FFFFFFF) % tab.length;
+        @SuppressWarnings("unchecked")
+        Entry<K,V> entry = (Entry<K,V>)tab[index];
+        for(; entry != null ; entry = entry.next) {
+            if ((entry.hash == hash) && entry.key.equals(key)) {
+                V old = entry.value;
+                entry.value = value;
+                return old;
+            }
+        }
+
+        addEntry(hash, key, value, index);
+        return null;
+    }
+```
+
+### HastTable的get方法
+
+```
+	public synchronized V get(Object key) {
+        Entry<?,?> tab[] = table;
+        int hash = key.hashCode();
+        int index = (hash & 0x7FFFFFFF) % tab.length;
+        for (Entry<?,?> e = tab[index] ; e != null ; e = e.next) {
+            if ((e.hash == hash) && e.key.equals(key)) {
+                return (V)e.value;
+            }
+        }
+        return null;
+    }
+```
+
+### HashMap深究
+
+jdk8更新内容为：HashCode相同的组成链表==》当链表长度大于8时，转化成红黑树
+
+- ***put方法***
+
+![put详细图](hashmap_put.png)
+
+- ***get方法***
+
+
+### HashMap为什么两倍扩容
+
+1. 为了hash的平均分布，table数组利用率更高
+2. 为了扩容时数据更好的迁移
+
+***第一个原因解释*** 我们来分析key如何转化为table[]数组的index
+
+```
+// 除去扩容，链表，树等知识点的伪代码
+void put( key, value ){
+	int hash = hash( key );
+	Node node = new Node( hash, key, value );
+	int length = table.length;
+	// ( length - 1 ) & hash 这是个关键
+	int index = ( length - 1 ) & hash;
+	table[index] = node;
+}
+```
+
+length 如果是 2的倍数，那么 length - 1 二进制表达式里面 1 是最多的。因此hash就表示最均匀，table利用率最高 
+
+***第二个原因解释*** 我们来分析resize方法
+
+```
+// 我仍然写一些伪代码
+void resize(){
+	oldCap, newCap;
+	newCap = oldCap << 1;
+	
+	node[] newtable = new node[newCap];
+	
+	// 下面将 table 中的元素复制进 newtable
+	// 为什么直接 复制呢，就普通的Array复制，因为hash对应的index变了，可以通过原因1看出来
+	
+	for( int j=0; j<oldCap; ++j ){
+		if( table[j] != null ){
+			// 假设node通过list链接
+			node e = table[j];
+			//我们肯定会想接下来便利 node 链表，将其中的节点插入到新index对应的链表中。可是我们这时候就用到二倍关系了
+			node l1, l2;
+			for(){
+				if( ( oldCap & e.hash ) > 0 ){
+					//插入到l1
+				}else{
+					// 插入到l2
+				}
+			}
+			//接下来将l1，l2中元素插入新的位置
+			//下面就是我要解释的，为什么不用 index = hash( key ) & ( newCap - 1 )
+			newtable[j] = l2;
+			newtable[j+oldCap] = l1;
+		}
+	}
+}
+```
+
+因为oldCap是2^n的关系，那么 如果hash的从右数第n为为1时，那么index肯定为 oldIndex + oldCap。hash第n位为0时，那么index肯定为 oldIndex。
+
+因此cap为2的倍数递增，就可以减少扩容时数据的迁移时的时间消耗
+
+
