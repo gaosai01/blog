@@ -35,7 +35,7 @@ ReentrantReadWriteLock 和 StampedLock 都是读写锁
 
 ReentrantReadWriteLock锁针对于读读不互斥，读写互斥，写写互斥。
 
-ReentrantReadWriteLock锁针对于读读不互斥，写写互斥，读时不阻塞写。
+StampedLock锁针对于读读不互斥，写写互斥，读时不阻塞写。
 
 
 ### synchronized和lock的区别
