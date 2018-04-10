@@ -128,6 +128,53 @@ for ( int i = 0; i < 20; i++) {
 
      根据JDK文档描述，大致意思是：执行该方法，线程池的状态立刻变成STOP状态，并试图停止所有正在执行的线程，不再处理还在池队列中等待的任务，当然，它会返回那些未执行的任务。 
      它试图终止线程的方法是通过调用Thread.interrupt()方法来实现的，但是大家知道，这种方法的作用有限，如果线程中没有***sleep 、wait、Condition、定时锁等应用***, interrupt()方法是无法中断当前的线程的。所以，ShutdownNow()并不代表线程池就一定立即就能退出，它可能必须要等待所有正在执行的任务都执行完成了才能退出。  
+     
+### 线程池的拒绝策略
+
+Excutors的静态方法默认创建的对象为：ThreadPoolExecutor实例
+
+```
+public ThreadPoolExecutor(int corePoolSize,
+		 int maximumPoolSize,
+ 		 long keepAliveTime, TimeUnit unit,
+  		 BlockingQueue workQueue, 
+  		 ThreadFactory threadFactory,
+   		 RejectedExecutionHandler handler); 
+```
+
+参数名、说明： 
+
+1. corePoolSize 线程池维护线程的最少数量 
+2. maximumPoolSize 线程池维护线程的最大数量 
+3. keepAliveTime 线程池维护线程所允许的空闲时间 
+4. workQueue 任务队列，用来存放我们所定义的任务处理线程 
+5. threadFactory 线程创建工厂 
+6. handler 线程池对拒绝任务的处理策略 
+
+解释拒绝处理策略
+
+四种默认实现
+
+AbortPolicy策略 抛出error
+
+CallerRunsPolicy策略 当前调用线程执行runable
+
+DiscardOledestPolicy策略 将最早将入队列的移除（忽律最早的），然后加入对列
+
+DiscardPolicy策略 忽律当前runable
+
+自定义拒绝策略处理气
+
+```
+   public class SystemLogPolicy implements RejectedExecutionHandler {
+        
+       public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+            System.out.println( "Task " + r.toString() +
+                                " rejected from " +
+                                e.toString() );
+        }
+    }
+```
 
 
 ### 6. Future 和 Callback 和 FutureTask 和 Runable
