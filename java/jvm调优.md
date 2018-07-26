@@ -32,6 +32,9 @@
 
 -XX:HeapDumpPath=/log/heapdump.hprof 堆dump文件地址
 
+-XX:OnOutOfMemoryError="sh ~/cleanup.sh" 当OutOfMemory导致程序退出时重启应用，脚本需要自己写
+
+
 -XX:+UseG1GC 启用G1收集器
 
 # JVM小工具
