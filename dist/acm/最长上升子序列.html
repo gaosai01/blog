@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h1>最长上升子序列</h1>
+
+<h4>需要注意的是，严格递增还是不下降序列</h4>
+
+<h3>方法一  O(n2)</h3>
+
+<p>序列:a[1..n]={2,3,4,1,5,6};</p>
+
+<p>dp[i] 表示为子序列以第i位结尾时的上升子序列的长度</p>
+
+<p>dp表达式为: dp[i] = max(dp[j]) + 1 	其中( a[i] &gt; a[j], i &gt; j );</p>
+
+<pre><code>int ans = 0;
+for( int i=0; i&lt;n; ++i ){
+	dp[i] = 1;
+	for( int j=0; j&lt;i; ++j ){
+		if( a[i] &gt;= a[j] ){
+			dp[i] = max( dp[i], dp[j]+1 );
+		}
+	}
+	ans = max( dp[i], ans );
+}
+print( ans );
+</code></pre>
+
+<h3>方法二 O(nlogn)</h3>
+
+<p>序列:a[1..n]={2,3,4,1,5,6};</p>
+
+<p>dp[i] 表示 长度 为 i 的串 最小的最后一位数字。</p>
+
+<p>dp的len为最后的答案。</p>
+
+<p>dp数组不代表最长上升子序列，比如a={1,2,3,5,6,7,8};则dp={1,2,3,8};</p>
+
+<p>因此dp数组时单调递增的，可以进行二分搜索。</p>
+
+<pre><code>int len = 0;
+dp[len] = a[0];
+for( int i=1; i&lt;n; ++i ){
+	if( a[i] &gt;= dp[len] ){
+		dp[++len] = a[i];
+	}else{
+		//在dp数组中，搜索从左到右第一个大于a[i]的数字所在的位置。
+		int index = lower_bounds( dp, 0, len+1, a[i] );
+		dp[index] = a[i];
+	}
+}
+
+print( len + 1 );
+</code></pre>
+
+
+</body>
+</html>

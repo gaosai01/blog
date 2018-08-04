@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>docker使用教程</h2>
+
+<h3>两个概念</h3>
+
+<p>docker容器</p>
+
+<p>docker镜像</p>
+
+<h3>docker安装本地镜像</h3>
+
+<p>docker build -t docker-image-demo:1.0.0 .</p>
+
+<h3>docker安装远程镜像</h3>
+
+<h3>启动docker镜像</h3>
+
+<p>docker run -d docker-image-demo</p>
+
+<h4>宿主机器链接容器</h4>
+
+<p>docker run -p 127.0.0.1:2379:2379 -d etcd</p>
+
+<h3>进入docker镜像中用shell进行交互</h3>
+
+<p>docker exec -it docker_name /bin/sh</p>
+
+<p>exit退出交互</p>
+
+<h3>查看docker容器的ip</h3>
+
+<p>sudo docker inspect -f=&lsquo;{{.NetworkSettings.IPAddress}}&rsquo; $(sudo docker ps -a -q)</p>
+
+<h3>多个docker和多个机器的连接</h3>
+
+<h3>Dockerfile</h3>
+
+<p>FROM,RUN,ENV,COPY,EXPOSE,ENTRYPOINT</p>
+
+<h3>.dockerignore文件</h3>
+
+
+</body>
+</html>

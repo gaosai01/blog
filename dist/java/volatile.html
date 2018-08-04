@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>volatile类型修饰符</h2>
+
+<blockquote>
+<p>时间：2017/08/16</p>
+
+<p>作者：Mr-GaoSai</p>
+
+<p>引用：<a href="http://www.importnew.com/18126.html">http://www.importnew.com/18126.html</a></p>
+</blockquote>
+
+<h3>jvm的一个知识点</h3>
+
+<p>多线程读取共享变量资源。每个线程会先将资源加到自己所在内存缓存起来，下次读取的时候直接从缓存中拿，提高了速度性能。然后出现的问题是如果一个线程修改了此变量，那么另一个线程已经将此变量加入了缓存，那么就读取脏数据。</p>
+
+<h3>volatile</h3>
+
+<p>这个修饰符，就保证每次访问volatile修饰的变量时不会读取缓存中的变量。</p>
+
+<p>保证了读取都是最新的。</p>
+
+<h3>++i多线程不安全</h3>
+
+<p>共享变量i进行了volatile修饰，但是++i在多线程下仍然是不安全的。因为++i等价于i=i+1;如果两个线程同时读取，同时修改，这样就导致少加个1。这种情况就得加锁。</p>
+
+<h3>面试题</h3>
+
+<pre><code class="language-java">//共享变量
+boolean stop = false;
+//线程1
+while(!stop){
+    doSomething();
+}
+//线程2
+stop = true;
+</code></pre>
+
+<p>上面代码可能会导致线程1无法结束。循环一直执行。</p>
+
+<pre><code class="language-java">//共享变量
+volatile boolean stop = false;
+//线程1
+while(!stop){
+    doSomething();
+}
+//线程2
+stop = true;
+</code></pre>
+
+<p>这样while循环的表达式每次读取都是最新的，这样就不会发生死循环了。</p>
+
+<h3>volatile使用场景</h3>
+
+<p>1）对变量的写操作不依赖于当前值</p>
+
+<p>2）该变量没有包含在具有其他变量的不变式中</p>
+
+
+</body>
+</html>
