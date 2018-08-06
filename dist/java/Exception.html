@@ -14,19 +14,23 @@
 
 <body>
 
-<h2>java中的异常</h2>
+<h2>java中的异常</h2>
 
-<h3>继承关系</h3>
+<p></p>
 
-<p>Exception和Error都继承自Throwable</p>
+<h3>继承关系</h3>
 
-<h3>throw和catch</h3>
+<p>Exception和Error都继承自Throwable
+</p>
 
-<p>throw出Throwable类型的对象（包括子类）</p>
+<h3>throw和catch</h3>
 
-<p>catch到Throwable类型的对象（包括子类）</p>
+<p>throw出Throwable类型的对象（包括子类）
 
-<pre><code>try {
+catch到Throwable类型的对象（包括子类）
+
+<code>
+try {
 	throw new Error();
 } catch (Exception e) {
 	e.printStackTrace();
@@ -34,29 +38,37 @@
 	System.out.println( &quot;q&quot; );
 	e.printStackTrace();
 }
-</code></pre>
+</code>
+</p>
 
-<h3>finally</h3>
+<h3>finally</h3>
 
-<p>不管 try 语句块正常结束还是异常结束，finally语句块都是要被执行的</p>
+<p>
+不管 try 语句块正常结束还是异常结束，finally语句块都是要被执行的
 
-<p>在try语句块或catch语句块中执行到System.exit(0)直接退出程序</p>
+在try语句块或catch语句块中执行到System.exit(0)直接退出程序
 
-<p>finally块中的return语句会覆盖try块中的return返回</p>
+finally块中的return语句会覆盖try块中的return返回
 
-<p>finally 语句块在 catch语句块中的return语句之前执行</p>
+finally 语句块在 catch语句块中的return语句之前执行
+</p>
 
-<h3>多catch捕获顺序</h3>
+<h3>多catch捕获顺序</h3>
 
-<p>从上到下以此catch，类似于switch，遇到匹配的类型 执行，下面的catch不会去判断和执行。</p>
+<p>
+从上到下以此catch，类似于switch，遇到匹配的类型 执行，下面的catch不会去判断和执行。
 
-<h3>Java中有的方法必须抛出异常，有的不用</h3>
+</p>
 
-<p>Java异常有Runtime（运行时异常）和Checked（编译时异常），其中，所有RuntimeException类及其子类的实例被称为Runtime异常，不是RuntimeException类及其子类的异常实例都被称为Checked异常</p>
+<h3>Java中有的方法必须抛出异常，有的不用</h3>
 
-<p>Java中除了RuntimeException及其任何子类，其他异常类都被Java异常强制处理机制强制异常处理。这些被强制异常处理的必须进行异常处理。否则就会提示 Unhandled exception type Exception 错误警告。而提示这个错误信息的方法，一定是这个方法所在的类用throws抛出了异常，所以在使用这个方法时候必须处理这个异常。</p>
+<p>
+Java异常有Runtime（运行时异常）和Checked（编译时异常），其中，所有RuntimeException类及其子类的实例被称为Runtime异常，不是RuntimeException类及其子类的异常实例都被称为Checked异常
 
-<pre><code>public void a(){
+Java中除了RuntimeException及其任何子类，其他异常类都被Java异常强制处理机制强制异常处理。这些被强制异常处理的必须进行异常处理。否则就会提示 Unhandled exception type Exception 错误警告。而提示这个错误信息的方法，一定是这个方法所在的类用throws抛出了异常，所以在使用这个方法时候必须处理这个异常。
+
+<code>
+public void a(){
 	// NullPointException 继承自 RuntimeException
 	throw new NullPointException();
 }
@@ -64,7 +76,7 @@
 public void b(){
 	throw new Exception();
 }
-</code></pre>
+</code></p>
 
 
 </body>

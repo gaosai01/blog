@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>Socket模拟Http请求</h2>
+
+<blockquote>
+<p>作者：Mr-GaoSai</p>
+
+<p>时间：2017/8/12</p>
+
+<p>github: <a href="https://github.com/Mr-GaoSai/socket2http">https://github.com/Mr-GaoSai/socket2http</a></p>
+</blockquote>
+
+<p>socket是对TCP/IP协议(传输层)的封装和应用（程序员层面上）</p>
+
+<p>Http协议(应用层协议)则是由Socket模拟实现。</p>
+
+<p><strong><em>这篇文章主要讲解Http协议方面的知识还有TCP/IP协议的三次握手和四次挥手</em></strong></p>
+
+<p>一个Http请求先要通过三次握手和服务器<strong>建立连接</strong>，然后发送特定格式的请求头到服务器端，然后服务器端返回响应头，然后客户端或者服务端进行四次挥手<strong>断开连接</strong>。</p>
+
+<h3>请求头</h3>
+
+<pre><code>GET / HTTP/1.1
+Host: www.zhihu.com
+Connection: close
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+Accept: */*
+</code></pre>
+
+<p>请求头的Source。</p>
+
+<h3>响应头</h3>
+
+<pre><code>HTTP/1.1 301 Moved Permanently
+Date: Sat, 12 Aug 2017 09:49:48 GMT
+Content-Type: text/html
+Content-Length: 178
+Connection: close
+Set-Cookie: aliyungf_tc=AQAAADiSQErS+AUA3pqBG7uYN7qYkzRC; Path=/; HttpOnly
+Location: https://www.zhihu.com/question/63800535
+X-Req-ID: 128BBB4598ECF37
+Server: ZWS
+Vary: Accept-Encoding
+
+&lt;html&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>响应头的Source</p>
+
+<p>响应码 301重定向 Location</p>
+
+<h3>三次握手</h3>
+
+<p>位码即<strong><em>tcp标志位</em></strong>,有6种标示:</p>
+
+<p>SYN(synchronous建立联机)</p>
+
+<p>ACK(acknowledgement 确认)</p>
+
+<p>PSH(push传送)</p>
+
+<p>FIN(finish结束)</p>
+
+<p>RST(reset重置)</p>
+
+<p>URG(urgent紧急)</p>
+
+<h3>四次挥手</h3>
+
+<p><img src="tcp34.png" alt="" /></p>
+
+
+</body>
+</html>

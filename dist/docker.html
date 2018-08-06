@@ -14,43 +14,65 @@
 
 <body>
 
-<h2>docker使用教程</h2>
+<p></p>
 
-<h3>两个概念</h3>
+<h2>docker使用教程</h2>
 
-<p>docker容器</p>
+<p></p>
 
-<p>docker镜像</p>
+<h3>两个概念</h3>
 
-<h3>docker安装本地镜像</h3>
+<p>docker容器
 
-<p>docker build -t docker-image-demo:1.0.0 .</p>
+docker镜像
+</p>
 
-<h3>docker安装远程镜像</h3>
+<h3>docker安装本地镜像</h3>
 
-<h3>启动docker镜像</h3>
+<p>
+docker build -t docker-image-demo:1.0.0 .
+</p>
 
-<p>docker run -d docker-image-demo</p>
+<h3>docker安装远程镜像</h3>
 
-<h4>宿主机器链接容器</h4>
+<p></p>
 
-<p>docker run -p 127.0.0.1:2379:2379 -d etcd</p>
+<h3>启动docker镜像</h3>
 
-<h3>进入docker镜像中用shell进行交互</h3>
+<p>
+docker run -d docker-image-demo
+</p>
 
-<p>docker exec -it docker_name /bin/sh</p>
+<h4>宿主机器链接容器</h4>
 
-<p>exit退出交互</p>
+<p>docker run -p 127.0.0.1:2379:2379 -d etcd 
+</p>
 
-<h3>查看docker容器的ip</h3>
+<h3>进入docker镜像中用shell进行交互</h3>
 
-<p>sudo docker inspect -f=&lsquo;{{.NetworkSettings.IPAddress}}&rsquo; $(sudo docker ps -a -q)</p>
+<p>
+docker exec -it docker_name /bin/sh
 
-<h3>多个docker和多个机器的连接</h3>
+exit退出交互
+</p>
 
-<h3>Dockerfile</h3>
+<h3>查看docker容器的ip</h3>
 
-<p>FROM,RUN,ENV,COPY,EXPOSE,ENTRYPOINT</p>
+<p>
+sudo docker inspect -f=&lsquo;{{.NetworkSettings.IPAddress}}&rsquo; $(sudo docker ps -a -q)
+
+</p>
+
+<h3>多个docker和多个机器的连接</h3>
+
+<p>
+</p>
+
+<h3>Dockerfile</h3>
+
+<p>
+FROM,RUN,ENV,COPY,EXPOSE,ENTRYPOINT
+</p>
 
 <h3>.dockerignore文件</h3>
 

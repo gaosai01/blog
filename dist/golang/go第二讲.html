@@ -14,44 +14,55 @@
 
 <body>
 
-<h1>go语言</h1>
+<p></p>
 
-<h3>import和package</h3>
+<h1>go语言</h1>
 
-<pre><code>package main
+<p></p>
+
+<h3>import和package</h3>
+
+<p>
+<code>
+package main
 import &quot;fmt&quot;
 func main(){
     fmt.Println( &quot;123&quot; )
 }
-</code></pre>
+</code>
+分析上面的代码
 
-<p>分析上面的代码</p>
+我们有package关键字，有一个要求，同一个文件夹下package对应的包名必须唯一,_test文件可以加上 _test包名
 
-<p>我们有package关键字，有一个要求，同一个文件夹下package对应的包名必须唯一,_test文件可以加上 _test包名</p>
+import关键字，你认为它引入的是包名对吧？其实不然，是文件夹名。我们可以尝试修改go源文件src的fmt文件夹名字至fmt1，这时找不到&rdquo;fmt&rdquo;了。因此import关键字引入的是goroot和gopath下面的文件夹，也可以绝对路径哦。然后文件内使用的使用如果import没有设置别名，使用时用package定义的包名
+</p>
 
-<p>import关键字，你认为它引入的是包名对吧？其实不然，是文件夹名。我们可以尝试修改go源文件src的fmt文件夹名字至fmt1，这时找不到&rdquo;fmt&rdquo;了。因此import关键字引入的是goroot和gopath下面的文件夹，也可以绝对路径哦。然后文件内使用的使用如果import没有设置别名，使用时用package定义的包名</p>
+<h3>strings</h3>
 
-<h3>strings</h3>
+<p>
+字符串处理包，位于$GOROOT/src/strings文件夹。可以阅读源码，此处简要说明近期遇到的func函数
 
-<p>字符串处理包，位于$GOROOT/src/strings文件夹。可以阅读源码，此处简要说明近期遇到的func函数</p>
-
-<pre><code>strings.Contains( a, &quot;12&quot; )
+<code>
+strings.Contains( a, &quot;12&quot; )
 
 strings.Index(a, &quot;12&quot;)
 
 strings.Compare( a, b )
 
 strings.Split(a, &quot;1&quot;)
-</code></pre>
+</code>
+</p>
 
-<h3>string的变量</h3>
+<h3>string的变量</h3>
 
-<pre><code>var a string = nil // error
-</code></pre>
+<p>
+<code>
+var a string = nil // error
+</code>
+string的变量不能为nil
 
-<p>string的变量不能为nil</p>
-
-<pre><code>var a = &quot;阿拉123&quot;
+<code>
+var a = &quot;阿拉123&quot;
 fmt.Println( len(a) ) // 输出9。可以见汉字占4个字节
 
 var b = []rune(a)
@@ -59,11 +70,14 @@ for _, v := range b {
     fmt.Println( v )
 }
 fmt.Println( len(b) ) //输出5
-</code></pre>
+</code>
+</p>
 
-<h3>strconv</h3>
+<h3>strconv</h3>
 
-<pre><code>//int to string
+<p>
+<code>
+//int to string
 strconv.Itoa(v)
 //100的16进制
 strconv.FormatInt( 100, 16 )
@@ -71,20 +85,24 @@ strconv.FormatInt( 100, 16 )
 k, _ := strconv.Atoi(&quot;1&quot;)
 //16进制的64转成int，第三个参数返回结果的bit大小 也就是int8 int16 int32 int64
 strconv.ParseInt(&quot;64&quot;, 16, 0)
-</code></pre>
+</code>
+</p>
 
-<h3>sort</h3>
+<h3>sort</h3>
 
-<pre><code>import &quot;sort&quot;
+<p>
+<code>
+import &quot;sort&quot;
 var a []int
 sort.Ints(a) //升序
 sort.Reverse( []type ) //反转
 sort.Sort([]interface)
-</code></pre>
+</code>
 
-<p>sort排序struct，需要让struct实现sort接口，三个方法.Len,Less,Swap</p>
+sort排序struct，需要让struct实现sort接口，三个方法.Len,Less,Swap
 
-<pre><code>type Node struct{
+<code>
+type Node struct{
     a int
 }
 type NodeList []Node
@@ -98,36 +116,41 @@ ax = append( ax, Node{1} )
 ax = append( ax, Node{2} )
 ax = append( ax, Node{-1} )
 sort.Sort(ax)
-</code></pre>
+</code>
+</p>
 
-<h3>[]Slice</h3>
+<h3>[]Slice</h3>
 
-<p>切片,浅复制</p>
+<p>切片,浅复制
 
-<p>[]Slice由数组指针，长度，容量构成</p>
+[]Slice由数组指针，长度，容量构成
 
-<pre><code>var a []int = make([]int, 5)
+<code>
+var a []int = make([]int, 5)
 var b = a
 a[4] = 5
 fmt.Println( b[4] )
 //上面输出为5.这表明了复制了基本变量，当出现扩容时可能会改变地址，因此可能改变不一致
-</code></pre>
+</code>
+</p>
 
-<h3>map[type]type</h3>
+<h3>map[type]type</h3>
 
-<p>map数据结构不能排序，遍历的顺序并没有按照插入的顺序</p>
+<p>
+map数据结构不能排序，遍历的顺序并没有按照插入的顺序
 
-<p>因此我们日常有三种需求，按照插入顺序，按照key顺序，按照value顺序</p>
+因此我们日常有三种需求，按照插入顺序，按照key顺序，按照value顺序
 
-<p>插入顺序需要维持key的数组</p>
+插入顺序需要维持key的数组
 
-<p>key顺序也是维持key的数组，然后Sort(Key)</p>
+key顺序也是维持key的数组，然后Sort(Key)
 
-<p>value顺序需要维持一个struct，下面的例子</p>
+value顺序需要维持一个struct，下面的例子
 
-<p>map类型其实是一个指针，因此map间赋值都是浅复制</p>
+map类型其实是一个指针，因此map间赋值都是浅复制
 
-<pre><code>//按key排序
+<code>
+//按key排序
 a := make(map[int]int)
 a[1] = 2
 a[3] = 4
@@ -140,9 +163,10 @@ sort.Ints(x)
 for _, v := range x {
     fmt.Printf( &quot;key:%d--&gt;value:%d\n&quot;, v, a[v] )
 }
-</code></pre>
+</code>
 
-<pre><code>//按照value排序
+<code>
+//按照value排序
 type Node struct {
     key int
     value int
@@ -165,7 +189,7 @@ sort.Sort( x )
 for _, v := range x {
     fmt.Printf( &quot;key:%d--&gt;value:%d\n&quot;, x.key, x.value )
 }
-</code></pre>
+</code></p>
 
 
 </body>

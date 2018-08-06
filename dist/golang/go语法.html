@@ -14,11 +14,19 @@
 
 <body>
 
-<h2>Golang语法</h2>
+<p>
+</p>
 
-<h4>变量</h4>
+<h2>Golang语法</h2>
 
-<pre><code>var a int
+<p>
+</p>
+
+<h4>变量</h4>
+
+<p>
+<code>
+var a int
 var b int = 5
 a = 6;
 c := 7;
@@ -28,18 +36,25 @@ var (
 )
 var f map[int]string = make( map[int]string )
 var g []int = make( []int, len, cap )
-</code></pre>
+</code>
+</p>
 
-<h4>常量</h4>
+<h4>常量</h4>
 
-<pre><code>const a int = 6
-</code></pre>
+<p>
+<code>
+const a int = 6
+</code>
 
-<p>以上常量变量如果是全局变量，那么可以在其他包中通过import包，包.变量的方式使用</p>
 
-<h4>数组</h4>
+以上常量变量如果是全局变量，那么可以在其他包中通过import包，包.变量的方式使用
+</p>
 
-<pre><code>var balance [10] float32
+<h4>数组</h4>
+
+<p>
+<code>
+var balance [10] float32
 
 //初始化数组
 
@@ -47,22 +62,28 @@ var balance = [5]float32{1000.0, 2.0, 3.4, 7.0, 50.0}
 
 //多维数组
 var variable_name [SIZE1][SIZE2]...[SIZEN] variable_type
-</code></pre>
+</code>
+</p>
 
-<h4>指针</h4>
+<h4>指针</h4>
 
-<pre><code>// 变量所在地址
+<p>
+<code>
+// 变量所在地址
 var b = 5
 var a *int = &amp;b
 fmt.Println( &quot;pointer address : %d&quot;, a )
 fmt.Println( &quot;value : %d&quot;, *a )
 
 //指针可作为函数的参数传递
-</code></pre>
+</code>
+</p>
 
-<h4>动态数组，切片，列表</h4>
+<h4>动态数组，切片，列表</h4>
 
-<pre><code>//切片不需要声明长度也可使用
+<p>
+<code>
+//切片不需要声明长度也可使用
 var a []int
 //或者使用make创建
 var b = make( []int, len, cap )
@@ -83,11 +104,14 @@ for _, value := range b[1:] {
 
 // struct的数组。深复制还是浅复制呢？
 
-</code></pre>
+</code>
+</p>
 
-<h4>Map集合</h4>
+<h4>Map集合</h4>
 
-<pre><code>/* 声明变量，默认 map 是 nil */
+<p>
+<code>
+/* 声明变量，默认 map 是 nil */
 var map_variable map[key_data_type]value_data_type
 
 /* 使用 make 函数 */
@@ -104,11 +128,15 @@ if(ok){
 delete( map_variable, &quot;key&quot; )
 //len() 函数
 var size = len( map_variable )
-</code></pre>
+</code>
 
-<h4>if</h4>
+</p>
 
-<pre><code>if true {
+<h4>if</h4>
+
+<p>
+<code>
+if true {
     fmt.Println( &quot;true&quot; )
 } else {
     fmt.Println( &quot;false&quot; )
@@ -118,11 +146,14 @@ if 表达式; true {
     fmt.Println( &quot;true&quot; )
 }
 
-</code></pre>
+</code>
+</p>
 
-<h4>for</h4>
+<h4>for</h4>
 
-<pre><code>for i:=1; i&lt;10; i += 1 {
+<p>
+<code>
+for i:=1; i&lt;10; i += 1 {
     fmt.Println( i )
 }
 
@@ -148,13 +179,16 @@ for key, value := range map {
 for i, c := range &quot;golang&quot; {
     fmt.Println(i, c)
 }
-</code></pre>
+</code>
 
-<p>注意go语言没有while循环,，但是可以用for替换</p>
+注意go语言没有while循环,，但是可以用for替换
+</p>
 
-<h4>func</h4>
+<h4>func</h4>
 
-<pre><code>//多个返回值，并且返回值为局部变量
+<p>
+<code>
+//多个返回值，并且返回值为局部变量
 func method_name( a int, b int ) ( c int, d int ){
     c = b
     d = a
@@ -171,11 +205,13 @@ var b method_type = func ( a int ){
 }
 b( 5 )
 //func可以作为函数参数
-</code></pre>
+</code></p>
 
-<h4>struct</h4>
+<h4>struct</h4>
 
-<pre><code>type struct_name struct {
+<p>
+<code>
+type struct_name struct {
     b int
     c int
 }
@@ -196,11 +232,14 @@ var x = struct_name{
     b : 1,
     c : 2 }
 fmt.Println( x.sum() )
-</code></pre>
+</code>
+</p>
 
-<h4>interface</h4>
+<h4>interface</h4>
 
-<pre><code>type iface_name interface {
+<p>
+<code>
+type iface_name interface {
     Method_name( int )int
 }
 //如何实现接口，类似于java中的struct implents interface
@@ -213,23 +252,26 @@ var iface iface_name
 var b struct_name
 iface = b
 
-</code></pre>
+</code>
+</p>
 
-<h4>{} new make 都是初始化struct结构提体的</h4>
+<h4>{} new make 都是初始化struct结构提体的</h4>
 
-<p>1、make只能用来分配及初始化类型为slice，map，chan的数据；new可以分配任意类型的数据</p>
+<p>
+1、make只能用来分配及初始化类型为slice，map，chan的数据；new可以分配任意类型的数据
 
-<p>2、new分配返回的是指针，即类型*T；make返回引用，即T；</p>
+2、new分配返回的是指针，即类型*T；make返回引用，即T；
 
-<p>3、new分配的空间被清零，make分配后，会进行初始化</p>
+3、new分配的空间被清零，make分配后，会进行初始化
 
-<p>4、对于struct的分配和初始化，除了可以使用new外，还可以这样做： T {}</p>
+4、对于struct的分配和初始化，除了可以使用new外，还可以这样做： T {}
+</p>
 
-<h4>T{}初始化变量需要注意地方</h4>
+<h4>T{}初始化变量需要注意地方</h4>
 
-<p>1、与C语言不同，T{}分配的局部变量是可以返回的，且返回后该空间不会释放，例如</p>
-
-<pre><code>import &quot;fmt&quot;
+<p>1、与C语言不同，T{}分配的局部变量是可以返回的，且返回后该空间不会释放，例如
+<code>
+import &quot;fmt&quot;
 type T struct {
     i, j int
 }
@@ -241,26 +283,27 @@ func b {
     t = a(1, 2)
     fmt.Println(t)
 }
-</code></pre>
-
-<p>2、一个语法问题
-使用T{}来初始化时，符号}不能单独占一行，否则会报错，如下：</p>
-
-<pre><code>missing ',' before newline in composite literal
+</code>
+2、一个语法问题
+使用T{}来初始化时，符号}不能单独占一行，否则会报错，如下：
+<code>
+missing ',' before newline in composite literal
 或者
 
 syntax error: need trailing comma before newline in composite literal
 non-declaration statement outside function body
 syntax error: unexpected }
-</code></pre>
+</code>
 
-<h4>伪继承</h4>
+</p>
+
+<h4>伪继承</h4>
 
 <p>go的struct无法实现真正的oo继承，单继承，多继承
 但是提供语法糖，然而仍然父类对象=子类对象这样的语句仍然不可使用
-只能使用接口实现多态</p>
-
-<pre><code>type A struct {
+只能使用接口实现多态
+<code>
+type A struct {
     b int
 }
 func (a A) Print(){
@@ -272,7 +315,7 @@ type B struct{
 }
 //这样就可以调用B.Print方法了
 //然而仍然无法有var a A = B{}这样的语句，强制类型转化也不行
-</code></pre>
+</code></p>
 
 
 </body>

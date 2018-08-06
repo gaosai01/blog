@@ -14,35 +14,45 @@
 
 <body>
 
-<h1>netty学习笔记</h1>
+<h1>netty学习笔记</h1>
 
-<h3>channelpipeline</h3>
+<p></p>
 
-<p>引用:<a href="http://blog.csdn.net/zxhoo/article/details/17264263">http://blog.csdn.net/zxhoo/article/details/17264263</a></p>
+<h3>channelpipeline</h3>
 
-<h3>编码器解码器handler</h3>
+<p>
+引用:<a href="http://blog.csdn.net/zxhoo/article/details/17264263">http://blog.csdn.net/zxhoo/article/details/17264263</a>
+</p>
 
-<p>引用1: <a href="http://www.importnew.com/26577.html">http://www.importnew.com/26577.html</a> ，拆包，粘包的问题</p>
+<h3>编码器解码器handler</h3>
 
-<p>引用2: <a href="http://www.infoq.com/cn/articles/netty-codec-framework-analyse/">http://www.infoq.com/cn/articles/netty-codec-framework-analyse/</a> 内置编码解码器</p>
+<p>
+引用1: <a href="http://www.importnew.com/26577.html">http://www.importnew.com/26577.html</a> ，拆包，粘包的问题
 
-<p>LineBasedFrameDecoder 回车换行解码器</p>
+引用2: <a href="http://www.infoq.com/cn/articles/netty-codec-framework-analyse/">http://www.infoq.com/cn/articles/netty-codec-framework-analyse/</a> 内置编码解码器
 
-<p>DelimiterBasedFrameDecoder 分隔符解码器</p>
+LineBasedFrameDecoder 回车换行解码器
 
-<p>FixedLengthFrameDecoder 固定长度解码器</p>
+DelimiterBasedFrameDecoder 分隔符解码器
 
-<p>ObjectEncoder Java序列化编码器</p>
+FixedLengthFrameDecoder 固定长度解码器
 
-<p>LengthFieldBasedFrameDecoder 通用解码器</p>
+ObjectEncoder Java序列化编码器
 
-<h3>ChannelInitializer</h3>
+LengthFieldBasedFrameDecoder 通用解码器
+</p>
 
-<h3>ByteBuf</h3>
+<h3>ChannelInitializer</h3>
 
-<p>BtyeBuf读操作主要提供以下功能：</p>
+<p>
+</p>
 
-<p>readByte：取1字节的内容；
+<h3>ByteBuf</h3>
+
+<p>
+BtyeBuf读操作主要提供以下功能：
+
+readByte：取1字节的内容；
 skipBytes： 跳过内容
 readUnsignedByte：取1字节的内容，返回（(short) (readByte() &amp; 0xFF)）；（能把负数转换为无符号吗？）
 readShort：取2字节的内容，返回转换后的short类型；
@@ -57,13 +67,14 @@ readFloat：取4字节的int内容，转换为float类型；
 readDouble：取8字节的long内容，转换为double类型；
 readBytes：取指定长度的内容，返回ByteBuf类型；
 readSlice：取指定长度的内容，返回ByteBuf类型；
-readBytes：取指定长度的内容到目标容器。</p>
+readBytes：取指定长度的内容到目标容器。
 
-<p>写操作</p>
+ 写操作
 
-<p>写操作提供的功能主要是往ByteBuf中写入byte内容，不再一一赘述。主要区别在于写入前根据类型转换为相对应长度的byte数组。</p>
+写操作提供的功能主要是往ByteBuf中写入byte内容，不再一一赘述。主要区别在于写入前根据类型转换为相对应长度的byte数组。
 
-<p>主要函数是：writeBoolean、writeByte、writeShort、writeMedium、writeInt、writeLong、writeChar、writeFloat、writeDouble、writeBytes、writeZero。</p>
+主要函数是：writeBoolean、writeByte、writeShort、writeMedium、writeInt、writeLong、writeChar、writeFloat、writeDouble、writeBytes、writeZero。
+</p>
 
 <h3>ChannelFuture</h3>
 

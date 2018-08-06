@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>Properties 配置文件使用</h2>
+
+<h4>问：为何而生</h4>
+
+<p>答：因为有时候当项目发布到正式环境中时，java生成的生成class文件不方便修改配置。比如常见的log4j的日志输出文件目录，开发环境和正式环境不一样，通过修改.porperties文件就可以改变java程序的执行效果，有类似于ioc控制反转的意思。这样方便了运维人员的工作。</p>
+
+<h4>System.getProperties();</h4>
+
+<h4>jvm的配置</h4>
+
+<pre><code class="language-java">//可以输出所有的jvm配置,比如java.version，java.home等
+Properties pps = System.getProperties();
+pps.list(System.out);
+</code></pre>
+
+<h4>获取jvm的一些版本信息，系统信息</h4>
+
+<pre><code class="language-java">
+private static String sysProp(String property) {
+    try {
+         return System.getProperty(property);
+    }
+    catch (SecurityException ex) {
+         System.err.println(&quot;SecurityException on try find system property '&quot;
+         + property + &quot;'&quot;);
+         return &quot;&quot;;
+    }
+}
+
+public static final String OS_NAME = sysProp(&quot;os.name&quot;).toLowerCase();
+public static final String JAVA_SPECIFICATION_VERSION = sysProp(&quot;java.specification.version&quot;);
+public static final String JAVA_VERSION = sysProp(&quot;java.version&quot;);
+
+// ------------------------- java版本
+private static boolean isJavaVersion(String versionPrefix) {
+     return JAVA_SPECIFICATION_VERSION.startsWith(versionPrefix);
+}
+
+public static boolean isJava1_1 = isJavaVersion(&quot;1.1&quot;);
+public static boolean isJava1_2 = isJavaVersion(&quot;1.2&quot;);
+public static boolean isJava1_3 = isJavaVersion(&quot;1.3&quot;);
+public static boolean isJava1_4 = isJavaVersion(&quot;1.4&quot;);
+public static boolean isJava1_5 = isJavaVersion(&quot;1.5&quot;);
+public static boolean isJava1_6 = isJavaVersion(&quot;1.6&quot;);
+public static boolean isJava1_7 = isJavaVersion(&quot;1.7&quot;);
+public static boolean isJava1_8 = isJavaVersion(&quot;1.8&quot;);
+public static boolean isJava1_9 = isJavaVersion(&quot;9&quot;);
+
+</code></pre>
+
+<h4>加载自己的配置文件</h4>
+
+<p>有教程存在6种加载方式，此处列举一种吧。</p>
+
+<pre><code class="language-java">Properties p = new Properties();
+p.load(new FileInputStream(new File(&quot;ketvalue.porperties&quot;)));
+String value = p.getProperty(&quot;mykey&quot;);
+System.out.println(value);
+</code></pre>
+
+
+</body>
+</html>

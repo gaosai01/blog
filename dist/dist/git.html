@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h4>分支</h4>
+
+<p><a href="https://git-scm.com/book/zh/v1/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E6%96%B0%E5%BB%BA%E4%B8%8E%E5%90%88%E5%B9%B6">https://git-scm.com/book/zh/v1/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E6%96%B0%E5%BB%BA%E4%B8%8E%E5%90%88%E5%B9%B6</a></p>
+
+<h4>查看状态</h4>
+
+<pre><code>git status
+</code></pre>
+
+<h4>撤销修改</h4>
+
+<pre><code>撤销所有修改
+
+git checkout . 
+</code></pre>
+
+<pre><code>撤销单独文件修改
+
+git chechout --file
+</code></pre>
+
+<h4>撤销新增</h4>
+
+<pre><code>git clean -df
+
+-d表示同时移除目录
+-f表示force
+-i
+-n
+因为在git的配置文件中,clean.requireForce=true,如果不加-f,clean将会拒绝执行.
+</code></pre>
+
+<h4>远程仓库</h4>
+
+<pre><code>查看
+git remote -v
+</code></pre>
+
+<pre><code>新增
+git remote add o http://aaaa/aa.git
+</code></pre>
+
+<pre><code>删除
+git remote remove origin
+</code></pre>
+
+<h4>远程仓库分支</h4>
+
+<pre><code>查看
+git branch -r
+</code></pre>
+
+<pre><code>拉取远程仓库分支到本地仓库分支
+git fetch orgin branch_1 :branch1
+远程分支branch_1到本地分支branch1
+</code></pre>
+
+<pre><code>git checkout -b dev 新建并切换到本地dev分支
+
+git pull origin dev 本地分支与远程分支相关联
+
+git checkout -b test 在本地新建分支test
+
+git push origin test   远程仓库中也就创建了一个test分支
+</code></pre>
+
+<h3>分支合并</h3>
+
+<p>git merage</p>
+
+<p>git rebase</p>
+
+<h4>版本回退</h4>
+
+<p>// 回退到之前的版本，都回退，慎重操作
+git reset &ndash;hard HEAD</p>
+
+<p>// 回退commit信息，源码不回退，目的优化commit提交信息
+git reset &ndash;soft 564asdasd</p>
+
+<h4>.gitignore失效</h4>
+
+<p>原因因为先将文件add到仓库中管理了，后添加的.gitignore文件</p>
+
+<p>执行下面代码即可</p>
+
+<pre><code>git pull origin master
+git rm -r --cached .
+git status
+git add .
+git commit -m &quot;del cache&quot;
+git push origin master
+</code></pre>
+
+
+</body>
+</html>

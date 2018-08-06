@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<p>#jvm系类之类加载，类初始化，类加载器ClassLoader</p>
+
+<h3>类加载过程</h3>
+
+<p><img src="类加载过程图片.jpg" alt="加载" /></p>
+
+<h3>类初始化</h3>
+
+<ul>
+<li><p>一个类中的初始化顺序</p>
+
+<p>（静态变量和静态初始化块（从上到下））=&gt;（变量和初始化块（从上到下）、构造器）。</p></li>
+
+<li><p>两个具有继承关系类的初始化顺序</p>
+
+<p>父类的（静态变量、静态初始化块）=&gt; 子类的（静态变量、静态初始化块）=&gt; 父类的（变量、初始化块、构造器）=&gt; 子类的（变量、初始化块、构造器）</p></li>
+</ul>
+
+<h3>类初始化注意事项</h3>
+
+<h4>对于静态字段，只有直接定义这个字段的类才会被初始化，因此通过其子类来引用父类中定义的静态字段，只会触发父类的初始化而不会触发子类的初始化。</h4>
+
+<h4>通过数组定义来引用类，不会触发此类的初始化</h4>
+
+<h4>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化</h4>
+
+<h4>静态语句块只能访问到定义在静态语句块之前的变量，定义在它之后的变量，在前面的静态语句块可以赋值，但是不能访问</h4>
+
+<p>代码1</p>
+
+<pre><code>public class SSClass
+{
+    static
+    {
+        System.out.println(&quot;SSClass&quot;);
+    }
+}    
+public class SuperClass extends SSClass
+{
+    static
+    {
+        System.out.println(&quot;SuperClass init!&quot;);
+    }
+ 
+    public static int value = 123;
+ 
+    public SuperClass()
+    {
+        System.out.println(&quot;init SuperClass&quot;);
+    }
+}
+public class SubClass extends SuperClass
+{
+    static
+    {
+        System.out.println(&quot;SubClass init&quot;);
+    }
+ 
+    static int a;
+ 
+    public SubClass()
+    {
+        System.out.println(&quot;init SubClass&quot;);
+    }
+}
+public class NotInitialization
+{
+    public static void main(String[] args)
+    {
+        System.out.println(SubClass.value);
+    }
+}
+//输出结果
+//SSClass
+//SuperClass init!
+//123
+</code></pre>
+
+<p>代码2</p>
+
+<pre><code>public class NotInitialization
+{
+    public static void main(String[] args)
+    {
+        SuperClass[] sca = new SuperClass[10];
+    }
+}
+
+</code></pre>
+
+<p>代码3</p>
+
+<pre><code>public class ConstClass
+{
+    static
+    {
+        System.out.println(&quot;ConstClass init!&quot;);
+    }
+    public static  final String HELLOWORLD = &quot;hello world&quot;;
+}
+public class NotInitialization
+{
+    public static void main(String[] args)
+    {
+        System.out.println(ConstClass.HELLOWORLD);
+    }
+}
+</code></pre>
+
+<p>代码4</p>
+
+<pre><code>public class Test
+{
+    static
+    {
+        i=0;
+        System.out.println(i);//这句编译器会报错：Cannot reference a field before it is defined（非法向前应用）
+    }
+    static int i=1;
+}
+
+</code></pre>
+
+<p>代码5</p>
+
+<pre><code>public class Base
+{
+    private String baseName = &quot;base&quot;;
+    public Base()
+    {
+        callName();
+    }
+
+    public void callName()
+    {
+        System. out. println(baseName);
+    }
+
+    static class Sub extends Base
+    {
+        private String baseName = &quot;sub&quot;;
+        public void callName()
+        {
+            System. out. println (baseName) ;
+        }
+    }
+    public static void main(String[] args)
+    {
+        Base b = new Sub();
+    }
+}
+//输出结果为null
+</code></pre>
+
+<h3>预定义类加载器</h3>
+
+<p>VM预定义的三种类型类加载器：</p>
+
+<p><strong><em>启动（Bootstrap）类加载器</em></strong>：是用本地代码实现的类装入器，它负责将 <Java_Runtime_Home>/lib下面的类库加载到内存中（比如rt.jar）。由于引导类加载器涉及到虚拟机本地实现细节，开发者无法直接获取到启动类加载器的引用，所以不允许直接通过引用进行操作。</p>
+
+<p><strong><em>标准扩展（Extension）类加载器</em></strong>：是由 Sun 的 ExtClassLoader（sun.misc.Launcher::ExtClassLoader）实现的。它负责将&lt; Java_Runtime_Home &gt;/lib/ext或者由系统变量 java.ext.dir指定位置中的类库加载到内存中。开发者可以直接使用标准扩展类加载器。</p>
+
+<p><strong><em>系统（System）类加载器</em></strong>：是由 Sun 的 AppClassLoader（sun.misc.Launcher$AppClassLoader）实现的。它负责将系统类路径（CLASSPATH）中指定的类库加载到内存中。开发者可以直接使用系统类加载器。</p>
+
+<h3>双亲委派机制</h3>
+
+<p><strong><em>目的</em></strong>：防止内存中出现多份同样的字节码</p>
+
+<p><strong><em>双亲委派模型工作过程</em></strong>是：如果一个类加载器收到类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器完成。每个类加载器都是如此，只有当父加载器在自己的搜索范围内找不到指定的类时（即ClassNotFoundException），子加载器才会尝试自己去加载。</p>
+
+<p><strong><em>例子:</em></strong>黑客自定义一个java.lang.String类，该String类具有系统的String类一样的功能，只是在某个函数稍作修改。比如equals函数，这个函数经常使用，如果在这这个函数中，黑客加入一些“病毒代码”。并且通过自定义类加载器加入到JVM中。此时，如果没有双亲委派模型，那么JVM就可能误以为黑客自定义的java.lang.String类是系统的String类，导致“病毒代码”被执行。</p>
+
+<h3>类加载器ClassLoader</h3>
+
+<h3>ClassLoader 这个java类中的源码</h3>
+
+<pre><code>public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+        return loadClass(name, false);
+}
+protected Class&lt;?&gt; loadClass(String name, boolean resolve)
+    throws ClassNotFoundException
+{
+    synchronized (getClassLoadingLock(name)) {
+        // First, check if the class has already been loaded
+        Class c = findLoadedClass(name);
+        if (c == null) {
+            long t0 = System.nanoTime();
+            try {
+                if (parent != null) {
+                    c = parent.loadClass(name, false);
+                } else {
+                    c = findBootstrapClassOrNull(name);
+                }
+            } catch (ClassNotFoundException e) {
+                // ClassNotFoundException thrown if class not found
+                // from the non-null parent class loader
+            }
+
+            if (c == null) {
+                // If still not found, then invoke findClass in order
+                // to find the class.
+                long t1 = System.nanoTime();
+                c = findClass(name);
+
+                // this is the defining class loader; record the stats
+                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                sun.misc.PerfCounter.getFindClasses().increment();
+            }
+        }
+        if (resolve) {
+            resolveClass(c);
+        }
+        return c;
+    }
+}
+</code></pre>
+
+<p>从loadClass方法可以看出双亲委派机制的工作原理,最终调用当前类的findClass方法。因此我们自定义一个类加载器的时候重写findClass即可</p>
+
+<h3>从文件或者数据库中加载类</h3>
+
+<p>我们在D:/test/com/gaosai/A.class,这里有一个java文件，不属于任何项目，我们想调用他，那么我门自己的类加载器就该上场了</p>
+
+<pre><code>import java.io.FileInputStream;
+import java.lang.reflect.Method;
+
+public class Main {
+    static class MyClassLoader extends ClassLoader {
+        private String classPath;
+
+        public MyClassLoader(String classPath) {
+            this.classPath = classPath;
+        }
+
+        private byte[] loadByte(String name) throws Exception {
+            name = name.replaceAll(&quot;\\.&quot;, &quot;/&quot;);
+            FileInputStream fis = new FileInputStream(classPath + &quot;/&quot; + name
+                    + &quot;.class&quot;);
+            int len = fis.available();
+            byte[] data = new byte[len];
+            fis.read(data);
+            fis.close();
+            return data;
+
+        }
+
+        protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {
+            try {
+                byte[] data = loadByte(name);
+                return defineClass(name, data, 0, data.length);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ClassNotFoundException();
+            }
+        }
+
+    };
+
+    public static void main(String args[]) throws Exception {
+        MyClassLoader classLoader = new MyClassLoader(&quot;D:/test&quot;);
+        Class clazz = classLoader.loadClass(&quot;com.gaosai.A&quot;);
+        Object obj = clazz.newInstance();
+        Method helloMethod = clazz.getDeclaredMethod(&quot;hello&quot;, null);
+        helloMethod.invoke(obj, null);
+    }
+}
+
+</code></pre>
+
+<h3>能不能自己写个类叫java.lang.System</h3>
+
+
+</body>
+</html>

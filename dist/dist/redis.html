@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>redis(非关系型数据库)</h2>
+
+<h3>1. 数据库演变</h3>
+
+<p>分库降低了单点机器的负载；分表，提高了数据操作的效率，尤其是Write操作的效率。</p>
+
+<h3>2. redis中数据结构</h3>
+
+<p>redis支持的的数据结构有：string，list，hash，set，sort set，bitmap，hyperloglogs</p>
+
+<ul>
+<li>string： 通过key存储字符串。</li>
+<li>list： 通过key存储双向链表。</li>
+<li>hash： 通过key存储map。</li>
+<li>set： 通过key存储集合。</li>
+<li>sort set： 通过key存储排序了的集合。</li>
+<li>bitmap： 通过key存储一个01串。</li>
+<li>hyperloglogs： i don’t know.</li>
+</ul>
+
+<h3>3. 常见命令</h3>
+
+<ul>
+<li>select 1: 选择1redis数据库</li>
+<li>set key value：存储一个string</li>
+<li>info clients： 查看当前的redis连接数</li>
+<li>config get maxclients ： 查询redis允许的最大连接数。</li>
+<li>。。。</li>
+</ul>
+
+<h3>3. redis应用</h3>
+
+<p><strong><em>0. hash或string</em></strong></p>
+
+<p>用hash或string存储用户个人信息。</p>
+
+<p><strong><em>1. 存储列表</em></strong></p>
+
+<p>这里尚未考虑数据冗余和性能，并且采用的json序列化。</p>
+
+<p>现在我们有一个论坛系统，论坛中的帖子列表。我们可以存储在sort set中。</p>
+
+<p>zadd zhihu 1000 {fid:1,uid:1,title:2,content:1,time:100000}</p>
+
+<p>然后我们可以从zhihu这个排序集合中查找出一组帖子列表，还支持分页。</p>
+
+<p>用list存储某个帖子所有评论。</p>
+
+<p><strong><em>2. bitmap</em></strong></p>
+
+<p>我们可以用位运算来实现统计的功能。</p>
+
+<p>统计活跃用户</p>
+
+<p>setbit play:yyyy-mm-dd user_id 1</p>
+
+<p><strong><em>3. 自增</em></strong></p>
+
+<p>我们可以用redis提供的线程安全的inrc去实现订单号</p>
+
+<h3>4. redis存储百亿级数据</h3>
+
+
+</body>
+</html>
