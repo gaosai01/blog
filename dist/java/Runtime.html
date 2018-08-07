@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>java.lang.Runtime类和Process</h2>
+
+<p></p>
+
+<h4>简介</h4>
+
+<p>
+Runtime类封装了运行时的环境。每个 Java 应用程序都有一个 Runtime 类实例，使应用程序能够与其运行的环境相连接。
+
+一般不能实例化一个Runtime对象，应用程序也不能创建自己的 Runtime 类实例，但可以通过 getRuntime 方法获取当前Runtime运行时对象的引用。
+
+一旦得到了一个当前的Runtime对象的引用，就可以调用Runtime对象的方法去控制Java虚拟机的状态和行为。 
+
+当Applet和其他不被信任的代码调用任何Runtime方法时，常常会引起SecurityException异常。
+</p>
+
+<h3>获取jvm的全部内存，空闲内存，最大内存</h3>
+
+<p>
+<code>java
+
+Runtime r = Runtime.getRuntime();
+System.out.println(r.totalMemory());
+System.out.println(r.freeMemory());
+System.out.println(r.maxMemory());
+</code>
+</p>
+
+<h3>运行子进程</h3>
+
+<p>
+<code>java
+Runtime r = Runtime.getRuntime();
+Process p = r.exec(&quot;java -version&quot;);
+InputStream is = p.getErrorStream();
+BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+String line;
+while ((line = reader.readLine()) != null) {
+	System.out.println(line);
+}
+//等待子进程退出,因此会造成阻塞
+p.waitFor();
+//获取子进程退出的返回值，0为正常退出。
+int code = p.exitValue();
+System.out.println(code);
+</code></p>
+
+<h3>gc和exit</h3>
+
+<p>垃圾回收和程序退出</p>
+
+
+</body>
+</html>

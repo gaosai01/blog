@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>自己动手写一个json解析器</h2>
+
+<p>
+在网络编程中，我们经常用到json作为网络传输的对象，因为json更加精简。所以我打算自己动手写一个json解析器，因为这样可以提高自己动手写代码的逻辑能力，后期重构代码时加入设计模式，可以让自己编码能力更上一层楼。
+
+我在造轮子，但我希望自己的轮子足够简单，可以让更多喜欢造轮子的朋友拿我的轮子作为借鉴。
+
+
+
+Jsonparser的思路
+
+readObject
+
+通过读取第一个Token字符，是空格的话跳过去继续读取下一个。
+
+<code>
+private JsonException exception( String str ){
+	return new JsonException( str );
+}
+
+String readString(){
+	StringBuilder sb = new StringBuilder();
+	int c = 0;
+	while( true ){
+		c = reder.read();
+		if( c == '\&quot;' ){
+			break;
+		}
+		sb.append( c );
+	}
+	return sb.toString();
+}
+
+Map&lt;String,Object&gt; readMap(){
+	List&lt;String&gt; keys = new LinkedList&lt;&gt;();
+	List&lt;Object&gt; values = new LinkedList&lt;&gt;();
+	boolean next = false;
+	while( true ){
+		int nextToken = nextToken();
+		if( nextToken == -1 ){
+			throw exception( &quot;Json字符串未正常关闭&quot; );
+		}
+		if( nextToken == '}' ){
+			break;
+		}
+		if( next ){
+			if( nextToken != ',' ){
+				throw exception( &quot;Json字符串格式错误:此处需要有逗号了&quot; );
+			}
+			next = false;
+			continue;
+		}
+		if( nextToken == ',' ){
+			throw exception( &quot;Json字符串格式错误:此处不应该有逗号&quot; );
+		}
+		if( nextToken != '\&quot;' ){
+			throw exception( &quot;Json字符串格式错误:Map格式需要key值&quot; );
+		}
+		String key = readString();
+		nextToken = nextToken();
+		if( nextToken != ':' ){
+			throw exception( &quot;Json字符串格式错误:Map格式key后面需要:&quot; );
+		}
+		Object value = readObject();
+		keys.add( key );
+		values.add( value );
+		next = true;
+	}
+	Map&lt;String,Object&gt; map = new HashMap&lt;&gt;(keys.size());
+	int i = 0;
+	for( String key : keys  ){
+		Object value = values.get(i);
+		map.put( key, value );
+		++i;
+	}
+	return map;
+}
+
+List&lt;Object&gt; readList(){
+	List&lt;Object&gt; ans = new LinkedList&lt;&gt;();
+	boolean next = false;
+	while( true ){
+		int nextToken = nextToken();
+		if( nextToken == -1 ){
+			throw exception(&quot;Json字符串格式不正确,json未正确关闭&quot;);
+		}
+		if( nextToken == ']' ){
+			break;
+		}
+		if( next ){
+			if( nextToken != ',' ){
+				throw exception( &quot;Json字符串格式错误:此处需要有逗号了&quot; );
+			}
+			next = false;
+			continue;
+		}
+		if( nextToken == ',' ){
+			throw exception( &quot;Json字符串格式错误:此处不应该有逗号&quot; );
+		}
+		next  = true;
+		if( nextToken == '\&quot;' ){
+			ans.add( readString() );
+			continue;
+		}
+		if( nextToken == '{' ){
+			ans.add( readMap() );
+			continue;
+		}
+		if( nextToken == '[' ){
+			ans.add( readList() );
+			continue;
+		}
+		if( nextToken == 'n' ){
+			ans.add( readNull() );
+			continue;
+		}
+		//数字
+	}
+	return ans;
+}
+
+int readInt( int start ){
+	
+	return 10;
+}
+
+Object readNull(){
+	int c = reader.read();
+	if( c != 'u' ){
+		throw new JsonException(&quot;Json字符串格式不正确&quot;);
+	}
+	c = reader.read();
+	if( c != 'l' ){
+		throw new JsonException(&quot;Json字符串格式不正确&quot;);
+	}
+	c = reader.read();
+	if( c != 'l' ){
+		throw new JsonException(&quot;Json字符串格式不正确&quot;);
+	}
+	return null;
+}
+
+int nextToken(){
+	int tokenType = 0;
+	do{
+		tokenType = reader.read();
+	}while( tokenType == ' ' || tokenType == '\r' || tokenType == '\n' );
+	return tokenType;
+}
+
+Object readObject(){
+	int tokenType = nextToken();
+	if( toeknType == -1 ){
+		//这里有两种情况要考虑，一种是被read调用时，空字符串返回null，正确
+		//如果被其他的方法调用，那么我们可以断定json格式不正确，因为他没正确关闭，
+		//应该抛出异常，但是没有，因为其他方法会判断的
+		return null;
+	}
+	if( tokenType == '{' ){
+		return readMap();
+	}
+	if( tokenType == '[' ){
+		return readlist();
+	}
+	if( tokenType == 'n' ){
+		return readNull();
+	}
+	if( token == '\&quot;' ){
+		return readString();
+	}
+	if( tokenType == ',' ){
+		throw new JsonException(&quot;Json字符串格式不正确&quot;);
+	}
+	throw new JsonException(&quot;Json字符串格式不正确&quot;);
+}
+
+Object read(){
+	Object obj = readObject();
+	int tokenType = nextToken();
+	if( tokenType != -1 ){
+		throw new JsonException(&quot;Json字符串格式不正确:未关闭&quot;);
+	}
+	return obj;
+}
+</code>
+</p>
+
+
+</body>
+</html>

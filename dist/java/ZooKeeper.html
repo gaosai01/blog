@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h1>Zookeeper</h1>
+
+<p></p>
+
+<h3>简介</h3>
+
+<p>
+ZooKeeper是一种为分布式应用所设计的高可用、高性能且一致的开源协调服务，是Google的Chubby一个开源的实现，它是集群的管理者，监视着集群中各个节点的状态根据节点提交的反馈进行下一步合理操作。最终，将简单易用的接口和性能高效、功能稳定的系统提供给用户
+</p>
+
+<h3>应用业务</h3>
+
+<p>
+1.命名服务   
+2.配置管理   
+3.集群管理   
+4.分布式锁  
+5.队列管理
+</p>
+
+<h3>节点类型</h3>
+
+<p>
+1、PERSISTENT-持久化目录节点 
+
+客户端与zookeeper断开连接后，该节点依旧存在 
+
+2、PERSISTENT_SEQUENTIAL-持久化顺序编号目录节点 
+
+客户端与zookeeper断开连接后，该节点依旧存在，只是Zookeeper给该节点名称进行顺序编号 
+
+3、EPHEMERAL-临时目录节点 
+
+客户端与zookeeper断开连接后，该节点被删除 
+
+4、EPHEMERAL_SEQUENTIAL-临时顺序编号目录节点
+
+客户端与zookeeper断开连接后，该节点被删除，只是Zookeeper给该节点名称进行顺序编号 
+
+
+</p>
+
+<h3>zkCli.sh</h3>
+
+<p>
+1.连接  zkCli.sh -server 192.168.255.133:2181
+
+2.查看节点 ls /
+
+3.查看节点内容 get /zookeeper/quota
+
+4.创建节点 create /zookeeper/test1 1111
+
+5.更新数据 set /zk/test1 222
+
+6.删除节点 delete /zk
+
+7.退出程序 quit
+
+
+</p>
+
+<h3>java api</h3>
+
+<p></p>
+
+
+</body>
+</html>

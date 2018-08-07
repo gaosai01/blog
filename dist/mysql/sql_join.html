@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>sql语句中的join表达式</h2>
+
+<p></p>
+
+<h3>内连接，左连接，右连接，外连接</h3>
+
+<p></p>
+
+<h3>对于左连接和右连接本人一直记忆不清，到底哪个表数据会null</h3>
+
+<p>
+今天恍然大悟，记录一下
+
+<strong>A left/right join B</strong>
+
+物理位置 记录 A左，B右。join前的方向英文标示着物理位置为此英文的反方向为null，另一种记忆方式为join前的方向词表示此方向的表需要是完全集
+
+<strong>A left join B</strong>     B表会出现null，A表的完全集
+
+<strong>A right join B</strong>    A表会出现null，B表的完全集</p>
+
+
+</body>
+</html>

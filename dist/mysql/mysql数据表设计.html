@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h2>数据库设计</h2>
+
+<p></p>
+
+<h3>试题1</h3>
+
+<p>
+业务需求：用户表(uid,name)，关注表( from_uid, to_uid ), 用户动态表( uid, message, time )。
+
+问题1：求出uid为1的用户关注的人的动态按时间排序前10条
+
+<code>
+select * from 用户动态表 where uid in
+ ( select to_uid from 关注表 where from_uid = 1 ) 
+ order by time desc limit 0, 10
+</code>
+
+<code>
+select 用户动态表.* from 用户动态表 left join 关注表 on 用户动态表.uid = 关注表.to_uid
+where 关注表.from_uid = 1 order by time limit 0, 10
+</code>
+
+问题2：如果uid为1的用户关注了100w个人，那么上面的sql性能肯定差，如何优化，空间换时间</p>
+
+
+</body>
+</html>
