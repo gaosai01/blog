@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h1>spring + spring mvc + mybatis + log4j 项目集成</h1>
+
+<h3>不要适合新手阅读，只做自己日常回顾</h3>
+
+<h3>首先声明项目采用maven做项目jar包管理</h3>
+
+<h3>1. 集成 spring 和 spring mvc</h3>
+
+<p>先加入jar包依赖</p>
+
+<pre><code>	&lt;properties&gt;
+		&lt;!-- spring版本号 --&gt;
+		&lt;spring.version&gt;4.0.2.RELEASE&lt;/spring.version&gt;
+		&lt;!-- mybatis版本号 --&gt;
+		&lt;mybatis.version&gt;3.2.6&lt;/mybatis.version&gt;
+		&lt;mybatis.spring.version&gt;1.2.2&lt;/mybatis.spring.version&gt;
+		&lt;!-- log4j日志文件管理包版本 --&gt;
+		&lt;slf4j.version&gt;1.7.7&lt;/slf4j.version&gt;
+		&lt;log4j.version&gt;1.2.17&lt;/log4j.version&gt;
+		&lt;mysql.version&gt;5.1.30&lt;/mysql.version&gt;
+		&lt;druid.version&gt;1.1.2&lt;/druid.version&gt;
+
+	&lt;/properties&gt;
+	
+		&lt;!-- spring核心包 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-oxm&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+</code></pre>
+
+<p>然后在web.xml上配置spring 和 spring mvc的配置文件</p>
+
+<pre><code>	&lt;!-- 配址spring的bean锁在的位置 --&gt;
+	&lt;context-param&gt;
+		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+		&lt;param-value&gt;classpath:conf/spring-*.xml&lt;/param-value&gt;
+	&lt;/context-param&gt;
+	&lt;!-- spring通过监听tomcat启动进行bean配置 --&gt;
+	&lt;listener&gt;
+		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+	&lt;/listener&gt;
+	&lt;!-- 配置spring mvc有关信息 --&gt;
+	&lt;servlet&gt;
+		&lt;servlet-name&gt;SpringMVC&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+		&lt;init-param&gt;
+			&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+			&lt;!-- spring mvc有关bean的配置路径 --&gt;
+			&lt;param-value&gt;classpath:springmvc-servlet.xml&lt;/param-value&gt;
+		&lt;/init-param&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;/servlet&gt;
+	&lt;servlet-mapping&gt;
+		&lt;servlet-name&gt;SpringMVC&lt;/servlet-name&gt;
+		&lt;url-pattern&gt;/&lt;/url-pattern&gt;
+	&lt;/servlet-mapping&gt;
+	
+	&lt;!-- 编码过滤器 --&gt;
+	&lt;filter&gt;
+		&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+		&lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+		&lt;!-- 3.0下的注解 --&gt;
+		&lt;async-supported&gt;true&lt;/async-supported&gt;
+		&lt;init-param&gt;
+			&lt;param-name&gt;encoding&lt;/param-name&gt;
+			&lt;param-value&gt;UTF-8&lt;/param-value&gt;
+		&lt;/init-param&gt;
+	&lt;/filter&gt;
+	&lt;filter-mapping&gt;
+		&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+	&lt;/filter-mapping&gt;
+	
+</code></pre>
+
+<p>然后各个bean的配置文件,先列举和spring mvc有关的吧</p>
+
+<p>springmvc-servlet.xml文件配置</p>
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+	xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+	xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+	xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+                        http://www.springframework.org/schema/mvc 
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+                        http://www.springframework.org/schema/context 
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+                        http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd&quot;&gt;
+	&lt;!-- 设置使用spring mvc有关注解（@controller等）的类所在的包 --&gt;
+	&lt;context:component-scan base-package=&quot;com.gaosai&quot; /&gt;
+	&lt;mvc:annotation-driven /&gt;
+	
+	&lt;!-- &lt;mvc:resources location=&quot;/assets/&quot; mapping=&quot;/assets/*&quot;&gt;&lt;/mvc:resources&gt; --&gt;
+&lt;/beans&gt;
+</code></pre>
+
+<h3>mybatis配置</h3>
+
+<p>首先加入jar包依赖</p>
+
+<pre><code>		&lt;!-- mybatis核心包 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+			&lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+			&lt;version&gt;${mybatis.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- mybatis/spring包 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+			&lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+			&lt;version&gt;${mybatis.spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+		&lt;!-- 导入Mysql数据库链接jar包 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;mysql&lt;/groupId&gt;
+			&lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+			&lt;version&gt;${mysql.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+			&lt;artifactId&gt;druid&lt;/artifactId&gt;
+			&lt;version&gt;${druid.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+
+</code></pre>
+
+<p>然后通过spring进行mybatis相关bean的配置</p>
+
+<pre><code>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+	xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+	xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+	xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd    
+                        http://www.springframework.org/schema/mvc    
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd&quot;&gt;
+
+	&lt;!-- 引入properties配置文件 --&gt;
+	&lt;bean id=&quot;propertyConfigurer&quot;
+		class=&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot;&gt;
+		&lt;property name=&quot;locations&quot;&gt;
+			&lt;list&gt;
+				&lt;value&gt;classpath:custom/jdbc.properties&lt;/value&gt;
+			&lt;/list&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;
+
+	&lt;bean id=&quot;dataSource&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot;
+		init-method=&quot;init&quot; destroy-method=&quot;close&quot;&gt;
+		&lt;property name=&quot;driverClassName&quot; value=&quot;${jdbc.driver}&quot; /&gt;
+		&lt;property name=&quot;url&quot; value=&quot;${jdbc.url}&quot; /&gt;
+		&lt;property name=&quot;username&quot; value=&quot;${jdbc.username}&quot; /&gt;
+		&lt;property name=&quot;password&quot; value=&quot;${jdbc.password}&quot; /&gt;
+		&lt;!-- 初始化连接大小 --&gt;
+		&lt;property name=&quot;initialSize&quot; value=&quot;${jdbc.initialSize}&quot;&gt;&lt;/property&gt;
+		&lt;!-- 连接池最大数量 --&gt;
+		&lt;property name=&quot;maxActive&quot; value=&quot;${jdbc.maxActive}&quot;&gt;&lt;/property&gt;
+		&lt;!-- 连接池最大空闲 --&gt;
+		&lt;property name=&quot;maxIdle&quot; value=&quot;${jdbc.maxIdle}&quot;&gt;&lt;/property&gt;
+		&lt;!-- 连接池最小空闲 --&gt;
+		&lt;property name=&quot;minIdle&quot; value=&quot;${jdbc.minIdle}&quot;&gt;&lt;/property&gt;
+		&lt;!-- 获取连接最大等待时间 --&gt;
+		&lt;property name=&quot;maxWait&quot; value=&quot;${jdbc.maxWait}&quot;&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+
+	&lt;!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 --&gt;
+	&lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
+		&lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+		&lt;!-- 自动扫描mapping.xml文件 --&gt;
+		&lt;property name=&quot;mapperLocations&quot; value=&quot;classpath:mapping/*.xml&quot;&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+
+	&lt;!-- DAO接口所在包名，Spring会自动查找其下的类 --&gt;
+	&lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
+		&lt;property name=&quot;basePackage&quot; value=&quot;com.gaosai.idp.mapping&quot; /&gt;
+		&lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot;&gt;&lt;/property&gt;
+	&lt;/bean&gt;
+
+	&lt;!-- (事务管理)transaction manager, use JtaTransactionManager for global tx --&gt;
+	&lt;bean id=&quot;transactionManager&quot;
+		class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+		&lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+	&lt;/bean&gt;
+
+&lt;/beans&gt;
+
+</code></pre>
+
+<p>其中数据库连接池使用了druid，有关jdbc的properties文件配置</p>
+
+<pre><code>jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;rewriteBatchedStatements=TRUE
+jdbc.username=root
+jdbc.password=123456
+jdbc.initialSize=0
+jdbc.maxActive=20
+jdbc.maxIdle=20
+jdbc.minIdle=1
+jdbc.maxWait=60000
+jdbc.minEvictableIdleTimeMillis=300000
+jdbc.timeBetweenEvictionRunsMillis=60000
+</code></pre>
+
+<p>有关mybatis的mapping文件设置，xml文件 可以使用 （<a href="https://github.com/mybatis/generator/）">https://github.com/mybatis/generator/）</a> 这个工具自动生成xml，实体，还有 class</p>
+
+<h3>log4j配置</h3>
+
+<p>首先加入jar包依赖</p>
+
+<pre><code>		&lt;!-- log start --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;log4j&lt;/groupId&gt;
+			&lt;artifactId&gt;log4j&lt;/artifactId&gt;
+			&lt;version&gt;${log4j.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- 格式化对象，方便输出日志 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+			&lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+			&lt;version&gt;${slf4j.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+			&lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+			&lt;version&gt;${slf4j.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- log end --&gt;
+</code></pre>
+
+<p>然后在web.xml里面进行配置</p>
+
+<pre><code>	&lt;!-- 加载log4j的配置文件log4j.properties --&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;log4jConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:log4j.properties&lt;/param-value&gt;
+    &lt;/context-param&gt;
+
+    &lt;!-- 设定刷新日志配置文件的时间间隔，这里设置为10s --&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;log4jRefreshInterval&lt;/param-name&gt;
+        &lt;param-value&gt;10000&lt;/param-value&gt;
+    &lt;/context-param&gt;
+
+    &lt;!-- 加载Spring框架中的log4j监听器Log4jConfigListener --&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+</code></pre>
+
+<p>然后配置log4j.properties文件</p>
+
+<pre><code># Root logger option
+log4j.rootLogger=DEBUG, stdout, file
+
+# Redirect log messages to console
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+# Redirect log messages to a log file
+log4j.appender.file=org.apache.log4j.RollingFileAppender
+#outputs to Tomcat home
+log4j.appender.file.File=/Users/mac/Desktop/xx.log
+log4j.appender.file.MaxFileSize=1MB
+log4j.appender.file.MaxBackupIndex=10
+log4j.appender.file.layout=org.apache.log4j.PatternLayout
+log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+</code></pre>
+
+<p>然后在class中使用log4j</p>
+
+<pre><code>
+import org.apache.log4j.Logger;
+
+public class  Test{
+
+	private static Logger logger = Logger.getLogger(Test.class);
+	
+	public void log(){
+	
+		logger.info(&quot;info &quot;);
+		logger.error(&quot;error&quot;);
+		logger.warn(&quot;warn&quot;);
+		
+	}
+	
+}
+</code></pre>
+
+<p>log4j中等级</p>
+
+<p>FATAL       0<br />
+ERROR      3<br />
+WARN       4<br />
+INFO         6<br />
+DEBUG      7</p>
+
+
+</body>
+</html>

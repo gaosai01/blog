@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h1>java调优-jstack</h1>
+
+<h3>jstack 用途</h3>
+
+<p>jstack常用做 <strong><em>定位死循环、线程阻塞、死锁等问题</em></strong></p>
+
+<h3>jstack使用</h3>
+
+<p>jstack pid</p>
+
+<p>这条命令会列举出java的pid进程中的各个线程信息，包括线程状态，阻塞时会显示哪里</p>
+
+<h3>线程状态</h3>
+
+<p>线程一般存在如下几种状态：</p>
+
+<p>1、RUNNABLE，线程处于执行中</p>
+
+<p>2、BLOCKED，线程被阻塞</p>
+
+<p>3、WAITING，线程正在等待</p>
+
+<h3>实例：jstack找出最耗cpu的线程并定位代码</h3>
+
+<p>利用到的命令</p>
+
+<ul>
+<li>jps(ps -ef|grep java) 查看java的进程id</li>
+<li>top 查看某个进程里面的线程信息</li>
+<li>printf 利用格式话输出，将10进程转化成16进制 printf &ldquo;%x\n&rdquo; 21742</li>
+<li>jstack 查看某个java进程的各个线程信息</li>
+<li>grep 搜索输出</li>
+</ul>
+
+<p>我们先运行如下的java应用</p>
+
+<pre><code>public class App {
+	public static void main(String[] args) {
+
+		while (true) {
+			
+		}
+	}
+}
+</code></pre>
+
+<p>然后找到这个java应用的pid,调用jps命令得到此App的pid为2463</p>
+
+<p>然后我们通过 top -Hp 2463 查看2463进程下的线程信息,找到最耗时的线程</p>
+
+<p>然后通过 jstack 2463 查看此进程下面的线程信息</p>
+
+<p>可以看到如下信息</p>
+
+<pre><code>&quot;main&quot; #1 prio=5 os_prio=31 tid=0x00007f8dae003800 nid=0x1c03 runnable [0x0000700003161000]
+   java.lang.Thread.State: RUNNABLE
+	at com.gaosai.test.App.main(App.java:10)
+</code></pre>
+
+<p>可以看到main在App的第10行运行，定位代码发现此处有死循环</p>
+
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h1>01背包，完全背包，多重背包，装满背包</h1>
+
+<h3>01背包</h3>
+
+<p>有n 种不同的物品，每个物品有两个属性，size 体积，value 价值，现在给一个容量为 w 的背包，问最多可带走多少价值的物品。</p>
+
+<p>方法一</p>
+
+<p>每个物品选和不选两种情况，用dp[i][j] 表示 前i种商品容量为j的背包最大的价值。
+则：dp[i][j] = max( dp[i-1][j], dp[i-1][j-size[i]]+value[i] );</p>
+
+<pre><code>for( int i=1; i&lt;=n; ++i ){
+	for( int j=size[i]; j&lt;=w; ++j ){
+		dp[i][j] = max( dp[i-1][j], dp[i-1][j-size[i]]+value[i] );
+	}
+}
+printf( dp[n][w] );
+</code></pre>
+
+<p>方法二</p>
+
+<p>方法二是对方法一的变形，将二维数组转化成一维数组。</p>
+
+<p>降序跑程序，就不会出现每个物品被选择多次的情况。</p>
+
+<pre><code>for( int i=1; i&lt;=n; ++i ){
+	for( int j=w; j&gt;=size[i]; --j ){
+		dp[j] = max( dp[j], dp[j-size[i]]+value[i] );
+	}
+}
+printf( dp[n][w] );
+</code></pre>
+
+<h3>完全背包</h3>
+
+<p>有n 种不同的物品，每个物品有两个属性，size 体积，value 价值，现在给一个容量为 w 的背包，在没种商品不计个数的选择情况下，问最多可带走多少价值的物品。</p>
+
+<p>方法</p>
+
+<p>将01背包降序转化成正序</p>
+
+<pre><code>for( int i=1; i&lt;=n; ++i ){
+	for( int j=size[i]; j&lt;=w; ++j ){
+		dp[j] = max( dp[j], dp[j-size[i]]+value[i] );
+	}
+}
+printf( dp[n][w] );
+</code></pre>
+
+<h3>多重背包</h3>
+
+<p>有n 种不同的物品，每个物品有三个属性，size 体积，value 价值，count个数，现在给一个容量为 w 的背包，问最多可带走多少价值的物品。</p>
+
+<p>方法一</p>
+
+<p>尚未优化的方法</p>
+
+<pre><code>for( int i=1; i&lt;=n; ++i ){
+	for( int j=w; j&gt;=size[i]; --j ){
+		for( int k=1; k&lt;=count[i]; ++k ){
+			if( j-size[i]*k &lt; 0 )break;
+			dp[j] = max( dp[j], dp[j-size[i]*k]+value[i]*k );
+		}
+	}
+}
+printf( dp[n][w] );
+</code></pre>
+
+<p>方法二</p>
+
+<p>这个可以将多个同种物品理解为多个单个物品，转化成01背包问题。</p>
+
+<p>由于选择k个商品，k可以拆分为01二进制，所以此处优化了的方法就是二进制优化</p>
+
+<pre><code>int main(){
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+    for(int i=1;i&lt;=n;i++){
+        int x,y,s,t=1;
+        scanf(&quot;%d%d%d&quot;,&amp;x,&amp;y,&amp;s);
+        while (s&gt;=t){
+            v[++n1]=x*t;
+            w[n1]=y*t;
+            s-=t;
+            t*=2;
+        }
+        v[++n1]=x*s;
+        w[n1]=y*s;                             //把s以2的指数分堆：1，2，4，…，2^(k-1)，s-2^k+1,
+    }
+	for(int i=1;i&lt;=n1;i++)
+        for(int j=m;j&gt;=v[i];j--)
+           f[j]=max(f[j],f[j-v[i]]+w[i]); 
+    printf(&quot;%d\n&quot;,f[m]);
+    return 0;
+}
+</code></pre>
+
+<p><img src="背包.jpeg" alt="图片出自：http://blog.csdn.net/lyhvoyage/article/details/8545852" /></p>
+
+
+</body>
+</html>

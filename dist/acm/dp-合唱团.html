@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="context-type" content="text/html" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="/assets/icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="/assets/md.css">
+
+    <title>高赛's blog</title>
+</head>
+
+<body>
+
+<h1>题目：合唱团</h1>
+
+<h3>题目描述</h3>
+
+<p>有 n 个学生站成一排，每个学生有一个能力值，牛牛想从这 n 个学生中按照顺序选取 k 名学生，要求相邻两个学生的位置编号的差不超过 d，使得这 k 个学生的能力值的乘积最大，你能返回最大的乘积吗？</p>
+
+<h3>输入描述:</h3>
+
+<p>每个输入包含 1 个测试用例。每个测试数据的第一行包含一个整数 n (1 &lt;= n &lt;= 50)，表示学生的个数，接下来的一行，包含 n 个整数，按顺序表示每个学生的能力值 ai（-50 &lt;= ai &lt;= 50）。接下来的一行包含两个整数，k 和 d (1 &lt;= k &lt;= 10, 1 &lt;= d &lt;= 50)。</p>
+
+<h3>输出描述:</h3>
+
+<p>输出一行表示最大的乘积。</p>
+
+<h3>示例1</h3>
+
+<h4>输入</h4>
+
+<p>3
+7 4 7
+2 50</p>
+
+<h4>输出</h4>
+
+<p>49</p>
+
+<h3>代码提交地址</h3>
+
+<p><a href="https://www.nowcoder.com/practice/661c49118ca241909add3a11c96408c8?tpId=85&amp;tqId=29830&amp;tPage=1&amp;rp=1&amp;ru=/ta/2017test&amp;qru=/ta/2017test/question-ranking">点此链接</a></p>
+
+<pre><code>https://www.nowcoder.com/practice/661c49118ca241909add3a11c96408c8?tpId=85&amp;tqId=29830&amp;tPage=1&amp;rp=1&amp;ru=/ta/2017test&amp;qru=/ta/2017test/question-ranking
+</code></pre>
+
+<h3>代码</h3>
+
+<pre><code>import java.util.*;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		int n = scan.nextInt();
+		int[] a = new int[n];
+		for (int i = 0; i &lt; n; ++i) {
+			a[i] = scan.nextInt();
+		}
+		int k = scan.nextInt();
+		int d = scan.nextInt();
+
+		long[][] dpmax = new long[k][n];
+		for (int i = 0; i &lt; n; ++i) {
+			dpmax[0][i] = a[i];
+		}
+		long[][] dpmin = new long[k][n];
+		for (int i = 0; i &lt; n; ++i) {
+			dpmin[0][i] = a[i];
+		}
+		for (int j = 1; j &lt; k; ++j) {
+			for (int i = j; i &lt; n; ++i) {
+				// 求最大值
+				dpmax[j][i] = dpmax[j - 1][i - 1] * a[i];
+				for (int x = i - 2; x &gt;= 0 &amp;&amp; i - x &lt;= d; --x) {
+					dpmax[j][i] = Math.max(dpmax[j][i], dpmax[j - 1][x] * a[i]);
+				}
+				dpmax[j][i] = Math.max(dpmax[j][i], dpmin[j - 1][i - 1] * a[i]);
+				for (int x = i - 2; x &gt;= 0 &amp;&amp; i - x &lt;= d; --x) {
+					dpmax[j][i] = Math.max(dpmax[j][i], dpmin[j - 1][x] * a[i]);
+				}
+				// 求最小值
+				dpmin[j][i] = dpmax[j - 1][i - 1] * a[i];
+				for (int x = i - 2; x &gt;= 0 &amp;&amp; i - x &lt;= d; --x) {
+					dpmin[j][i] = Math.min(dpmin[j][i], dpmax[j - 1][x] * a[i]);
+				}
+				dpmin[j][i] = Math.min(dpmin[j][i], dpmin[j - 1][i - 1] * a[i]);
+				for (int x = i - 2; x &gt;= 0 &amp;&amp; i - x &lt;= d; --x) {
+					dpmin[j][i] = Math.min(dpmin[j][i], dpmin[j - 1][x] * a[i]);
+				}
+
+			}
+		}
+		// 找最大值
+		long ans = 0;
+		for (int i = 0; i &lt; n; ++i) {
+			ans = Math.max(ans, dpmax[k - 1][i]);
+			ans = Math.max(ans, dpmin[k - 1][i]);
+		}
+		System.out.println(ans);
+
+	}
+}
+
+</code></pre>
+
+
+</body>
+</html>
