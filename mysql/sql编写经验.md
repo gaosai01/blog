@@ -33,6 +33,7 @@ select name from user where name like 'zhangsan%'
 
 ### 在字段上进行计算不能命中索引
 
+
 ```sql
 select name from user where FROM_UNIXTIME(create_time) < CURDATE();
 ```

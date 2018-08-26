@@ -60,6 +60,9 @@
 
 [acid事物隔离技术](mysql/实务数据库隔离技术.md)
 
+
+[sql隐式类型转化](mysql/sql隐式类型转化.md)
+
 ### redis知识
 
 [redis使用场景笔记](redis/redis.md)
