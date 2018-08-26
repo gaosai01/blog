@@ -3,7 +3,7 @@
 ---
 
 ### 简介
-在程序开发中，经常会和数据库打交道，也因此我们会更加看重sql语句的执行效率，这篇文章主要讲解sql语句中暗藏的隐式类型转化的知识,如果需要学习索引的使用可以看这篇文章[mysql创建索引经验](https://github.com/crossoverJie/JCSprout/blob/master/MD/SQL-optimization.md)，首先我门先看几个案例
+在程序开发中，经常会和数据库打交道，也因此我们会更加看重sql语句的执行效率，如果需要学习索引的使用可以看这篇文章[mysql创建索引经验](https://github.com/crossoverJie/JCSprout/blob/master/MD/SQL-optimization.md)，本文主要讲解sql语句中暗藏的隐式类型转化的知识,首先我门先看几个案例。
 
 ### 案例一:varchar和long的转化
 #### t1的表结构
