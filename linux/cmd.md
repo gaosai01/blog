@@ -40,3 +40,9 @@ ps -ef | grep "nginx"
 ```
 netstat -ap | grep "39762" | grep "LISTEN"
 ```
+
+### 解压
+
+```
+tar -xf a.tar.gz
+```
